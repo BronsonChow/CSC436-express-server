@@ -2,9 +2,11 @@ import express from "express"; //ESM
 
 const app = express();
 const PORT = 3000;
+app.use(express.json());
+
 let nextId = 7;
 
-const recipes = [
+let recipes = [
     { id: 1, name: "Margerita Pizza", cuisine: "Italian", minutes: 20, tags: ["vegetarian", "cheese"] },
     { id: 2, name: "Shrimp Fried Rice", cuisine: "Chinese", minutes: 30, tags: ["rice", "shrimp"] },
     { id: 3, name: "Chicken Caesar Salad", cuisine: "American", minutes: 15, tags: ["salad", "chicken"] },
@@ -35,13 +37,22 @@ app.get("/api/recipes", (req, res) => {
 app.get("/api/recipes/:id", (req, res) => {
     console.log(`Fetching recipe with id ${req.params.id}`);
     const id = Number(req.params.id);
-    const recipe = recipes.find(r => r.id === id);
+    const recipe = recipes.find((r) => r.id === id);
 
     if (!recipe) {
         return res.status(404).json({ error: `No recipe with id ${req.params.id}` });
     }
 
     res.json(recipe);
+});
+
+app.delete("/api/recipes/:id", (req, res) => {
+    const recipe = recipes.find((r) => r.id === Number(req.params.id));
+    if(!recipe) return res.status(404).json({ error: `No recipe with id ${req.params.id}` });
+    recipes = recipes.filter((r) => r.id !== recipe.id);
+
+    res.status(204).end();
+    console.log(recipes);
 });
 
 app.post("/api/recipes", (req, res) => {
@@ -58,7 +69,8 @@ app.post("/api/recipes", (req, res) => {
     const [minutes] = object;
     const [tags] = object;
     */
-    const { name, cuisine, minutes, tags } = req.body;
+    const { name, cuisine, minutes, tags } = req.body ?? {};
+
 
     if(typeof name !== "string" || name.trim() === "") {
         return res.status(400).json({ error: "Name must be a non-empty string" });
