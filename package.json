@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node --watch server.js"
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "env": "node --watch --env-file=.env server.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,10 @@
   },
   "homepage": "https://github.com/BronsonChow/CSC436-express-server#readme",
   "dependencies": {
-    "express": "^5.3.0"
+    "@supabase/server": "^1.9.2",
+    "@supabase/supabase-js": "^2.118.0",
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "supabase-js": "^0.0.1-security"
   }
 }
